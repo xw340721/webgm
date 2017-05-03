@@ -19,7 +19,7 @@ func init() {
 }
 
 //GetUser 获取玩家数据
-func Main(res http.ResponseWriter, r *http.Request) interface{} {
+func Main(res http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	actions, err := iutil.StringUpperIndex(r.FormValue("action"))
 	if err != nil {
@@ -43,5 +43,4 @@ func Main(res http.ResponseWriter, r *http.Request) interface{} {
 	if returns[0].Interface() != nil {
 		logrus.Error("[处理函数] 出现错误")
 	}
-	return returns[0].Interface()
 }
