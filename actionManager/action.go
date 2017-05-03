@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type CallBack func(res http.ResponseWriter, r *http.Request) string
+type CallBack func(res http.ResponseWriter, r *http.Request) error
 
 type Action struct {
 	CallFn map[string]CallBack
@@ -37,5 +37,3 @@ func (a *Action) GetAction(s string) (error, CallBack) {
 	}
 	return RemoveError, nil
 }
-
-

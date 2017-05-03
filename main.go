@@ -8,7 +8,6 @@ import (
 	"github.com/xw340721/webgm/config"
 	"github.com/xw340721/webgm/handle"
 	"github.com/xw340721/webgm/middleware"
-	"github.com/xw340721/webgm/model"
 )
 
 func init() {
@@ -18,8 +17,6 @@ func init() {
 		os.Exit(0)
 	}
 
-	//连接数据库
-	model.NewConn()
 }
 
 func main() {

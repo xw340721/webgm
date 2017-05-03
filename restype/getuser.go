@@ -19,3 +19,8 @@ type GetUser struct {
 	Status bool     `json:"status"`
 	Data   UserInfo `json:"data"`
 }
+
+type Test struct {
+	ID     int  `json:"id,string"`
+	GameId uint `json:"game_id,string"`
+}

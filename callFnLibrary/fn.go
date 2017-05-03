@@ -3,18 +3,24 @@ package callFnLibrary
 import (
 	"net/http"
 
-	"github.com/gogap/logrus"
+	"encoding/json"
+
 	"github.com/xw340721/webgm/iutil"
+	"github.com/xw340721/webgm/model"
+	"github.com/xw340721/webgm/reqtype"
 )
 
-func GetUser(res http.ResponseWriter, r *http.Request) string {
+//GetUser 为测试案例
+func GetUser(res http.ResponseWriter, r *http.Request) error {
 	r.ParseForm()
-	data := iutil.DecodeBase( r.FormValue("data"))
+	data := iutil.DecodeBase(r.FormValue("data"))
 
+	getUser := reqtype.GetUser{}
+	json.Unmarshal([]byte(data), &getUser)
 
+	row := model.Test(getUser.ServerID)
 
-
-
-	logrus.Info(data)
-	return "fdas"
+	response, _ := json.Marshal(row)
+	res.Write(response)
+	return nil
 }

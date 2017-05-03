@@ -3,7 +3,6 @@ package handle
 import (
 	"net/http"
 
-	"os"
 	"reflect"
 
 	"github.com/gogap/logrus"
@@ -25,13 +24,13 @@ func Main(res http.ResponseWriter, r *http.Request) interface{} {
 	actions, err := iutil.StringUpperIndex(r.FormValue("action"))
 	if err != nil {
 		logrus.Error(err.Error())
-		os.Exit(0)
+		//os.Exit(0)
 	}
 
 	err, fn := Action.GetAction(actions)
 	if err != nil {
 		logrus.Errorf("[处理函数] 处理函数错误 函数名为: %s ; 错误代码 %s", actions, err.Error())
-		os.Exit(0)
+		//os.Exit(0)
 	}
 
 	callBack := reflect.ValueOf(fn)
@@ -41,5 +40,8 @@ func Main(res http.ResponseWriter, r *http.Request) interface{} {
 	}
 
 	returns := callBack.Call([]reflect.Value{reflect.ValueOf(res), reflect.ValueOf(r)})
+	if returns[0].Interface() != nil {
+		logrus.Error("[处理函数] 出现错误")
+	}
 	return returns[0].Interface()
 }
