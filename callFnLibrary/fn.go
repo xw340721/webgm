@@ -8,19 +8,42 @@ import (
 	"github.com/xw340721/webgm/iutil"
 	"github.com/xw340721/webgm/model"
 	"github.com/xw340721/webgm/reqtype"
+	"github.com/xw340721/webgm/restype"
+)
+
+const (
+	ContentType = "Content-Type"
+	ContentJSON = "application/json"
 )
 
 //GetUser 为测试案例
 func GetUser(res http.ResponseWriter, r *http.Request) error {
+	var status bool = true
+
 	r.ParseForm()
-	data := iutil.DecodeBase(r.FormValue("data"))
+	users := iutil.DecodeBase(r.FormValue("data"))
 
 	getUser := reqtype.GetUser{}
-	json.Unmarshal([]byte(data), &getUser)
+	json.Unmarshal([]byte(users), &getUser)
 
-	row := model.Test(getUser.ServerID)
+	test := model.Test{}
+	returnData, err := test.Test(getUser.ServerID)
 
-	response, _ := json.Marshal(row)
-	res.Write(response)
+	res.Header().Set(ContentType, ContentJSON)
+	if err != nil {
+		status = false
+		res.WriteHeader(400)
+	} else {
+		res.WriteHeader(200)
+	}
+
+	response := restype.Return{
+		Status: status,
+		Data:   returnData,
+	}
+
+	bytes, _ := json.Marshal(&response)
+	res.Write(bytes)
+
 	return nil
 }
