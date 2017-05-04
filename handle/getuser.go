@@ -7,18 +7,18 @@ import (
 
 	"github.com/gogap/logrus"
 	"github.com/xw340721/webgm/actionManager"
-	"github.com/xw340721/webgm/callFnLibrary"
 	"github.com/xw340721/webgm/iutil"
+	"github.com/xw340721/webgm/mutations"
 )
 
 var Action *actionManager.Action
 
 func init() {
 	Action = actionManager.NewAction()
-	Action.AddAction("getUser", callFnLibrary.GetUser)
+	Action.AddAction("getUser", mutations.TestDemo)
 }
 
-//GetUser 获取玩家数据
+//Main 主handle
 func Main(res http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	actions, err := iutil.StringUpperIndex(r.FormValue("action"))
@@ -30,7 +30,6 @@ func Main(res http.ResponseWriter, r *http.Request) {
 	err, fn := Action.GetAction(actions)
 	if err != nil {
 		logrus.Errorf("[处理函数] 处理函数错误 函数名为: %s ; 错误代码 %s", actions, err.Error())
-		//os.Exit(0)
 	}
 
 	callBack := reflect.ValueOf(fn)

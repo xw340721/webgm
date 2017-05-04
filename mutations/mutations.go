@@ -1,4 +1,4 @@
-package callFnLibrary
+package mutations
 
 import (
 	"net/http"
@@ -7,29 +7,32 @@ import (
 
 	"github.com/xw340721/webgm/iutil"
 	"github.com/xw340721/webgm/model"
-	"github.com/xw340721/webgm/reqtype"
-	"github.com/xw340721/webgm/restype"
+	"github.com/xw340721/webgm/request"
+	"github.com/xw340721/webgm/response"
 )
 
 const (
 	ContentType = "Content-Type"
 	ContentJSON = "application/json"
+	Charset     = "charset"
+	UTF_8       = "utf-8"
 )
 
 //GetUser 为测试案例
-func GetUser(res http.ResponseWriter, r *http.Request) error {
+func TestDemo(res http.ResponseWriter, r *http.Request) error {
 	var status bool = true
 
 	r.ParseForm()
 	users := iutil.DecodeBase(r.FormValue("data"))
 
-	getUser := reqtype.GetUser{}
+	getUser := request.GetUser{}
 	json.Unmarshal([]byte(users), &getUser)
 
 	test := model.Test{}
 	returnData, err := test.Test(getUser.ServerID)
 
 	res.Header().Set(ContentType, ContentJSON)
+	res.Header().Set(Charset, UTF_8)
 	if err != nil {
 		status = false
 		res.WriteHeader(400)
@@ -37,12 +40,12 @@ func GetUser(res http.ResponseWriter, r *http.Request) error {
 		res.WriteHeader(200)
 	}
 
-	response := restype.Return{
+	ret := response.Return{
 		Status: status,
 		Data:   returnData,
 	}
 
-	bytes, _ := json.Marshal(&response)
+	bytes, _ := json.Marshal(&ret)
 	res.Write(bytes)
 
 	return nil

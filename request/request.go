@@ -1,4 +1,4 @@
-package reqtype
+package request
 
 //API 接口统一地址
 type API struct {

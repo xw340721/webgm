@@ -10,13 +10,18 @@ type Test struct {
 	ID     int  `json:"id"`
 	GameId uint `json:"game_id"`
 }
-type TestEntry []Test
+type TestData struct {
+	AllTotal int               `json:"all_total"`
+	Field    map[string]string `json:"fields"`
+	List     []Test            `json:"list"`
+}
 
 //GetUser 返回查询的玩家数量
 func (t *Test) Test(serverID int) (interface{}, error) {
 	conn := NewConn()
-
 	defer conn.Close()
+
+	//query
 	stmt, err := conn.Prepare(`SELECT id,game_id FROM server WHERE server_id = ?`)
 	if err != nil {
 		logrus.Error("[mysql] 准备解析失败", err.Error())
@@ -28,49 +33,32 @@ func (t *Test) Test(serverID int) (interface{}, error) {
 		logrus.Error("[mysql] 查询失败", err.Error())
 	}
 
+	//分析columns
 	columns, err := rows.Columns()
 
 	if err != nil {
 		logrus.Error("[mysql] 解析columns失败")
 	}
 
-	count := len(columns)
+	data, num, _ := ReturnToJson(columns, rows)
 
-	tableData := make([]map[string]interface{}, 0)
-	values := make([]interface{}, count)
-	valuesPtrs := make([]interface{}, count)
+	//创建field
+	field := make(map[string]string)
+	field["game_id"] = "游戏ID"
+	field["id"] = "ID"
 
-	for rows.Next() {
-		for i := 0; i < count; i++ {
-			valuesPtrs[i] = &values[i]
-		}
-		rows.Scan(valuesPtrs...)
-		entry := make(map[string]interface{})
-		for i, col := range columns {
-			var v interface{}
-			val := values[i]
-			b, ok := val.([]byte)
-			if ok {
-				v = string(b)
-			} else {
-				v = val
-			}
-			entry[col] = v
-		}
-		tableData = append(tableData, entry)
+	//构造返回值
+	testEntries := TestData{
+		AllTotal: num,
+		Field:    field,
 	}
 
-	data, _ := json.Marshal(tableData)
-
-	testEntries := TestEntry{}
-
-	json.Unmarshal(data, &testEntries)
+	json.Unmarshal(data, &testEntries.List)
 
 	err = rows.Err()
 	if err != nil {
 		logrus.Error("[mysql] 查询结果失败", err.Error())
 	}
 
-	logrus.Info(testEntries)
 	return &testEntries, nil
 }
