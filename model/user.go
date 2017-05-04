@@ -3,7 +3,10 @@ package model
 import (
 	"encoding/json"
 
+	"fmt"
+
 	"github.com/gogap/logrus"
+	"github.com/xw340721/webgm/sql"
 )
 
 type Test struct {
@@ -21,8 +24,10 @@ func (t *Test) Test(serverID int) (interface{}, error) {
 	conn := NewConn()
 	defer conn.Close()
 
+	sql := fmt.Sprintf(sql.NormalSelect, "id,game_id", "server", "server_id = ?")
+
 	//query
-	stmt, err := conn.Prepare(`SELECT id,game_id FROM server WHERE server_id = ?`)
+	stmt, err := conn.Prepare(sql)
 	if err != nil {
 		logrus.Error("[mysql] 准备解析失败", err.Error())
 	}
