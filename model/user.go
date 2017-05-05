@@ -19,30 +19,32 @@ type TestData struct {
 	List     []Test            `json:"list"`
 }
 
+var mLogrus = logrus.WithField("package", "model")
+
 //GetUser 返回查询的玩家数量
 func (t *Test) Test(serverID int) (interface{}, error) {
 	conn := NewConn()
 	defer conn.Close()
 
-	sql := fmt.Sprintf(sql.NormalSelect, "id,game_id", "server", "server_id = ?")
+	query := fmt.Sprintf(sql.NormalSelect, "id,game_id", "server", "server_id = ?")
 
 	//query
-	stmt, err := conn.Prepare(sql)
+	stmt, err := conn.Prepare(query)
 	if err != nil {
-		logrus.Error("[mysql] 准备解析失败", err.Error())
+		mLogrus.Error("[test] 准备解析失败", err.Error())
 	}
 	rows, err := stmt.Query(serverID)
 	defer rows.Close()
 
 	if err != nil {
-		logrus.Error("[mysql] 查询失败", err.Error())
+		mLogrus.Error("[test] 查询失败", err.Error())
 	}
 
 	//分析columns
 	columns, err := rows.Columns()
 
 	if err != nil {
-		logrus.Error("[mysql] 解析columns失败")
+		mLogrus.Error("[test] 解析columns失败")
 	}
 
 	data, num, _ := ReturnToJson(columns, rows)
@@ -62,7 +64,7 @@ func (t *Test) Test(serverID int) (interface{}, error) {
 
 	err = rows.Err()
 	if err != nil {
-		logrus.Error("[mysql] 查询结果失败", err.Error())
+		mLogrus.Error("[mysql] 查询结果失败", err.Error())
 	}
 
 	return &testEntries, nil

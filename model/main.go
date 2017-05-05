@@ -2,13 +2,11 @@ package model
 
 import (
 	"database/sql"
-
-	"github.com/gogap/logrus"
-	"github.com/xw340721/webgm/config"
-
 	"encoding/json"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gogap/logrus"
+	"github.com/xw340721/webgm/config"
 )
 
 //NewConn 创建sql通道
@@ -16,7 +14,7 @@ func NewConn() *sql.DB {
 	var err error
 	conn, err := sql.Open(config.Get("env", "driver"), config.Get("env", "address"))
 	if err != nil {
-		logrus.Error("[启动] 创建mysql连接", err.Error())
+		logrus.Error("[conn] 创建mysql连接", err.Error())
 		//os.Exit(0)
 	}
 	return conn

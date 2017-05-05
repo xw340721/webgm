@@ -9,6 +9,8 @@ import (
 
 var configData map[string]map[string]string
 
+var mLogrus = logrus.WithField("package", "config")
+
 //Load 加载config文件
 func Load(path string) error {
 	file, err := ioutil.ReadFile(path)
@@ -26,12 +28,12 @@ func Load(path string) error {
 func Get(table, key string) string {
 	t, ok := configData[table]
 	if !ok {
-		logrus.Warnf("[配置] 无法读取%v.%v", table, key)
+		mLogrus.Warnf("[config] 无法读取%v.%v", table, key)
 		return ""
 	}
 	val, ok := t[key]
 	if !ok {
-		logrus.Warnf("[配置] 无法读取%v.%v", table, key)
+		mLogrus.Warnf("[config] 无法读取%v.%v", table, key)
 		return ""
 	}
 	return val
