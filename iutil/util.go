@@ -8,7 +8,7 @@ import (
 	"github.com/gogap/logrus"
 )
 
-var StringUpperIndexError = errors.New("[函数库] 传入字段小于1个字符")
+var StringUpperIndexError = errors.New("传入字段小于1个字符")
 
 var mLogrus = logrus.WithFields(logrus.Fields{"package": "iutls"})
 

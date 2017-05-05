@@ -20,10 +20,18 @@ func NewConn() *sql.DB {
 	return conn
 }
 
-//EntryToJson 将查询的数据返回为json格式
-func ReturnToJson(columns []string, rows *sql.Rows) ([]byte, int, error) {
+//ReturnToJson 将查询的数据返回为json格式
+func ReturnToJson(rows *sql.Rows) ([]byte, int, error) {
+
+	//分析columns
+	columns, err := rows.Columns()
+
+	if err != nil {
+		mLogrus.Error("[test] 解析columns失败")
+	}
+
 	//todo num 不应该在这里面取值
-	var num int = 0
+	var num = 0
 	count := len(columns)
 
 	tableData := make([]map[string]interface{}, 0)

@@ -26,7 +26,7 @@ func Main(res http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	actions, err := iutil.StringUpperIndex(r.FormValue("action"))
 	if err != nil {
-		logrus.Error(err.Error())
+		mLogrus.Error("[Main] 函数库出现错误", err.Error())
 	}
 
 	err, fn := Action.GetAction(actions)

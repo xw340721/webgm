@@ -21,7 +21,7 @@ type TestData struct {
 
 var mLogrus = logrus.WithField("package", "model")
 
-//GetUser 返回查询的玩家数量
+//Test 返回查询的玩家数量
 func (t *Test) Test(serverID int) (interface{}, error) {
 	conn := NewConn()
 	defer conn.Close()
@@ -40,14 +40,7 @@ func (t *Test) Test(serverID int) (interface{}, error) {
 		mLogrus.Error("[test] 查询失败", err.Error())
 	}
 
-	//分析columns
-	columns, err := rows.Columns()
-
-	if err != nil {
-		mLogrus.Error("[test] 解析columns失败")
-	}
-
-	data, num, _ := ReturnToJson(columns, rows)
+	data, num, _ := ReturnToJson(rows)
 
 	//创建field
 	field := make(map[string]string)
