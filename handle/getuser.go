@@ -54,7 +54,7 @@ func Main(res http.ResponseWriter, r *http.Request) {
 		}
 		data, _ := json.Marshal(ret)
 
-		res.WriteHeader(500)
+		res.WriteHeader(404)
 		res.Write(data)
 	}
 

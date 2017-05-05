@@ -1,9 +1,8 @@
 package mutations
 
 import (
-	"net/http"
-
 	"encoding/json"
+	"net/http"
 
 	"github.com/xw340721/webgm/iutil"
 	"github.com/xw340721/webgm/model"
@@ -35,7 +34,7 @@ func TestDemo(res http.ResponseWriter, r *http.Request) error {
 	res.Header().Set(Charset, UTF_8)
 	if err != nil {
 		status = false
-		res.WriteHeader(400)
+		res.WriteHeader(404)
 	} else {
 		res.WriteHeader(200)
 	}
